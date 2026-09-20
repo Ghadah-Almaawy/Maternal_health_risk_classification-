@@ -1,21 +1,21 @@
-# Maternal Health Risk Classification 🤰🩺
+# Maternal Health Risk Classification
 
 A data mining project that classifies pregnant women into three maternal health risk levels (**Low / Mid / High**) using physiological indicators, comparing six different machine learning classifiers to find the most reliable model.
 
 > Course project — DS312: Data Mining.
 > This was a **group project**; this repository reflects my contribution to the shared codebase.
 
-## 📌 Problem Statement
+##  Problem Statement
 
 Maternal mortality remains a critical global health issue, and early risk detection can help prioritize care for high-risk pregnancies. This project uses IoT-collected physiological data (age, blood pressure, blood sugar, body temperature, heart rate) from hospitals and community clinics to predict a pregnant woman's health risk level.
 
 **Dataset:** [Maternal Health Risk Data Set](https://www.kaggle.com/datasets/csafrit2/maternal-health-risk-data/data) (Kaggle) — 1,014 records.
 
-## 🎯 Objective
+##  Objective
 
 Build and compare multiple classification models to predict maternal health risk level (Low/Mid/High), and identify the most accurate and reliable model for this task.
 
-## 🗂️ Project Workflow
+##  Project Workflow
 
 1. **EDA** — inspected structure, data types, and summary statistics; visualized variable trends by risk level (e.g. age, blood pressure, blood sugar).
 2. **Data Preprocessing** — checked for missing values and duplicates, fixed data types, and handled outliers per-feature using the IQR method with domain-specific thresholds.
@@ -30,7 +30,7 @@ Build and compare multiple classification models to predict maternal health risk
    - Artificial Neural Network (ANN, Keras/TensorFlow)
 6. **Evaluation** — confusion matrices, classification reports, ROC curves, and a final comparison using **Jaccard index, F1-score, and Log Loss**.
 
-## 📊 Results
+##  Results
 
 | Model | Accuracy | F1-score | Jaccard | Log Loss |
 |---|---|---|---|---|
@@ -43,7 +43,7 @@ Build and compare multiple classification models to predict maternal health risk
 
 **Random Forest** was the best-performing model on both F1-score and Jaccard index, correctly classifying 77.6% of cases, with especially strong precision on the "Low Risk" class (93%). Naïve Bayes achieved the lowest Log Loss, meaning its predicted probabilities were the best calibrated, despite lower raw accuracy.
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - Python
 - pandas, numpy — data handling
@@ -53,7 +53,7 @@ Build and compare multiple classification models to predict maternal health risk
 - TensorFlow / Keras — Artificial Neural Network
 - pydotplus — decision tree visualization
 
-## 🚀 Running the Project
+##  Running the Project
 
 ```bash
 git clone <this-repo-url>
@@ -64,10 +64,10 @@ jupyter notebook maternal_health_risk_classification.ipynb
 
 > Note: the dataset (`Maternal Health Risk Data Set.csv`) is publicly available on [Kaggle](https://www.kaggle.com/datasets/csafrit2/maternal-health-risk-data/data) and is not redistributed here — download it and place it in the project root to run the notebook end-to-end.
 
-## 👥 Team & Contribution
+##  Team & Contribution
 
-This was a group project completed as part of the DS312 Data Mining course. My role focused on **[fill in your specific contribution, e.g. "model building & evaluation" or "preprocessing & class-imbalance handling"]**.
+This was a group project completed as part of the DS312 Data Mining course. My role focused on **[preprocessing & class-imbalance handling, model building & evaluation]**.
 
-## 📄 License
+##  License
 
 This project is shared for educational and portfolio purposes.
