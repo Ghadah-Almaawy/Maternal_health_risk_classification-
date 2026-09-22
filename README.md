@@ -1,9 +1,11 @@
-# Maternal Health Risk Classification
+# Maternal Health Risk Classification 
 
 A data mining project that classifies pregnant women into three maternal health risk levels (**Low / Mid / High**) using physiological indicators, comparing six different machine learning classifiers to find the most reliable model.
 
 > Course project — DS312: Data Mining.
 > This was a **group project**; this repository reflects my contribution to the shared codebase.
+
+**Live Demo:** https://GhadahAlmaawy.github.io/maternal-health-risk-classification/
 
 ##  Problem Statement
 
@@ -11,7 +13,7 @@ Maternal mortality remains a critical global health issue, and early risk detect
 
 **Dataset:** [Maternal Health Risk Data Set](https://www.kaggle.com/datasets/csafrit2/maternal-health-risk-data/data) (Kaggle) — 1,014 records.
 
-##  Objective
+## Objective
 
 Build and compare multiple classification models to predict maternal health risk level (Low/Mid/High), and identify the most accurate and reliable model for this task.
 
@@ -43,7 +45,15 @@ Build and compare multiple classification models to predict maternal health risk
 
 **Random Forest** was the best-performing model on both F1-score and Jaccard index, correctly classifying 77.6% of cases, with especially strong precision on the "Low Risk" class (93%). Naïve Bayes achieved the lowest Log Loss, meaning its predicted probabilities were the best calibrated, despite lower raw accuracy.
 
-##  Tech Stack
+## Interactive Demo
+
+A browser-based version lets you adjust six clinical measurements (age, blood pressure, blood sugar, body temperature, heart rate) with sliders and get an instant risk-level prediction, with confidence shown across all three risk levels.
+
+**Try it:** https://GhadahAlmaawy.github.io/maternal-health-risk-classification/
+
+> This runs a 25-tree Random Forest directly in the browser (no server needed), trained on the same public dataset. See a note in the repo if you'd like details on how it was built.
+
+## Tech Stack
 
 - Python
 - pandas, numpy — data handling
@@ -53,7 +63,7 @@ Build and compare multiple classification models to predict maternal health risk
 - TensorFlow / Keras — Artificial Neural Network
 - pydotplus — decision tree visualization
 
-##  Running the Project
+## Running the Project
 
 ```bash
 git clone <this-repo-url>
@@ -66,8 +76,8 @@ jupyter notebook maternal_health_risk_classification.ipynb
 
 ##  Team & Contribution
 
-This was a group project completed as part of the DS312 Data Mining course. My role focused on **[preprocessing & class-imbalance handling, model building & evaluation]**.
+This was a group project completed as part of the DS312 Data Mining course. My role focused on **preprocessing , class imbalance handling, model building & evaluation**.
 
 ##  License
 
-This project is shared for educational and portfolio purposes.
+This project is shared for educational and portfolio purposes. purposes.
