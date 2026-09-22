@@ -48,7 +48,7 @@ Build and compare multiple classification models to predict maternal health risk
 
 A browser-based version lets you adjust six clinical measurements (age, blood pressure, blood sugar, body temperature, heart rate) with sliders and get an instant risk-level prediction, with confidence shown across all three risk levels.
 
-**Try it:** https://GhadahAlmaawy.github.io/maternal-health-risk-classification/
+**Try it:** https://ghadah-almaawy.github.io/Maternal_health_risk_classification-/
 
 > This runs a 25-tree Random Forest directly in the browser (no server needed), trained on the same public dataset. See a note in the repo if you'd like details on how it was built.
 
