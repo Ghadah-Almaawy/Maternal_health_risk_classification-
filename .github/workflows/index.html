@@ -1,43 +1,275 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maternal Health Risk Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F6;
+    --surface: #FFFFFF;
+    --ink: #2B1F26;
+    --ink-soft: #6B5760;
+    --ink-faint: #9C8B93;
+    --line: #E8DFE2;
+    --rose: #A0435F;
+    --rose-deep: #7A2F45;
+    --rose-tint: #F3E3E8;
+    --sage: #4C7A63;
+    --amber: #B87A2E;
+    --red: #A5303D;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1E1519;
+      --surface: #281E23;
+      --ink: #F2E8EB;
+      --ink-soft: #C7B4BC;
+      --ink-faint: #93818A;
+      --line: #3B2C32;
+      --rose: #D98BA3;
+      --rose-deep: #E8AABB;
+      --rose-tint: #34232A;
+      --sage: #7FB79A;
+      --amber: #E0A85C;
+      --red: #E17B85;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1E1519; --surface: #281E23; --ink: #F2E8EB; --ink-soft: #C7B4BC;
+    --ink-faint: #93818A; --line: #3B2C32; --rose: #D98BA3; --rose-deep: #E8AABB;
+    --rose-tint: #34232A; --sage: #7FB79A; --amber: #E0A85C; --red: #E17B85;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .wrap { max-width: 600px; margin: 0 auto; padding: 48px 24px 80px; }
+  header h1 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(28px, 5vw, 36px);
+    margin: 0 0 12px;
+  }
+  header p { font-size: 16px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 6px; max-width: 52ch; }
+  .meta { font-size: 13px; color: var(--ink-faint); margin: 18px 0 0; padding-top: 18px; border-top: 1px solid var(--line); }
 
-on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
+  .field { margin: 28px 0; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .field-head label { font-size: 15px; font-weight: 500; }
+  .field-head .val { font-family: 'Newsreader', Georgia, serif; font-size: 20px; color: var(--rose-deep); }
+  .field .range-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-faint); margin-top: 6px; }
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--line);
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--rose);
+    cursor: pointer;
+    border: 3px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--rose);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--rose); cursor: pointer; border: 3px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--rose);
+  }
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  button.submit {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px 20px;
+    background: var(--rose-deep);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.submit:hover { opacity: 0.92; }
+  button.submit:active { opacity: 0.8; }
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+  #result {
+    margin-top: 32px;
+    padding: 26px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    display: none;
+  }
+  #result.show { display: block; }
+  #result .label {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 600;
+    font-size: 24px;
+    margin: 0 0 4px;
+  }
+  #result .sub { font-size: 14px; color: var(--ink-soft); margin: 0 0 22px; }
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  .probrow { margin-bottom: 14px; }
+  .probrow:last-child { margin-bottom: 0; }
+  .probrow .top { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 6px; }
+  .probrow .name { color: var(--ink); }
+  .probrow .pct { color: var(--ink-faint); }
+  .ptrack { height: 7px; border-radius: 4px; background: var(--line); overflow: hidden; }
+  .pfill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
 
-jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+  footer {
+    margin-top: 48px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Maternal health risk check</h1>
+    <p>Enter clinical measurements to estimate whether a pregnancy risk level reads as low, mid, or high.</p>
+    <p class="meta">Random forest model from the Maternal Health Risk Classification project &middot; 78% test accuracy</p>
+  </header>
+
+  <form id="form">
+    <div class="field">
+      <div class="field-head"><label for="age">Age</label><span class="val" id="age-val">28</span></div>
+      <input type="range" id="age" min="10" max="65" value="28" step="1">
+      <div class="range-labels"><span>10</span><span>65 years</span></div>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label for="sbp">Systolic blood pressure</label><span class="val" id="sbp-val">120</span></div>
+      <input type="range" id="sbp" min="75" max="160" value="120" step="1">
+      <div class="range-labels"><span>75</span><span>160 mmHg</span></div>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label for="dbp">Diastolic blood pressure</label><span class="val" id="dbp-val">80</span></div>
+      <input type="range" id="dbp" min="49" max="110" value="80" step="1">
+      <div class="range-labels"><span>49</span><span>110 mmHg</span></div>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label for="bs">Blood sugar</label><span class="val" id="bs-val">7.5</span></div>
+      <input type="range" id="bs" min="6" max="19" value="7.5" step="0.1">
+      <div class="range-labels"><span>6.0</span><span>19.0 mmol/L</span></div>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label for="temp">Body temperature</label><span class="val" id="temp-val">98.0</span></div>
+      <input type="range" id="temp" min="98" max="103" value="98" step="0.1">
+      <div class="range-labels"><span>98.0</span><span>103.0 &deg;F</span></div>
+    </div>
+
+    <div class="field">
+      <div class="field-head"><label for="hr">Heart rate</label><span class="val" id="hr-val">76</span></div>
+      <input type="range" id="hr" min="7" max="90" value="76" step="1">
+      <div class="range-labels"><span>7</span><span>90 bpm</span></div>
+    </div>
+
+    <button type="submit" class="submit">Check risk level</button>
+  </form>
+
+  <div id="result">
+    <p class="label" id="result-label"></p>
+    <p class="sub" id="result-sub">Model confidence across all three risk levels</p>
+    <div id="prob-rows"></div>
+  </div>
+
+  <footer>
+    Trained on the Maternal Health Risk dataset (IoT-collected measurements from hospitals and clinics in Bangladesh).
+    This is an educational estimate from a student project, not a medical diagnosis &mdash; always consult a healthcare provider for pregnancy risk assessment.
+  </footer>
+</div>
+
+<script>
+const FOREST = {"classes":["high risk","low risk","mid risk"],"trees":[{"f":"BS","t":7.95,"l":{"f":"BodyTemp","t":99.0,"l":{"f":"Age","t":54.5,"l":{"f":"SystolicBP","t":135.0,"l":{"f":"BS","t":7.05,"l":{"f":"HeartRate","t":77.5,"l":{"p":[0.0,0.4681,0.5319]},"r":{"p":[0.2,0.1333,0.6667]}},"r":{"f":"SystolicBP","t":125.0,"l":{"p":[0.0,0.875,0.125]},"r":{"p":[0.0,0.0,1.0]}}},"r":{"f":"DiastolicBP","t":85.0,"l":{"p":[0.6667,0.0,0.3333]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[0.0,1.0,0.0]}},"r":{"f":"Age","t":28.5,"l":{"f":"HeartRate","t":68.5,"l":{"p":[0.6,0.0,0.4]},"r":{"f":"BodyTemp","t":101.5,"l":{"f":"SystolicBP","t":100.0,"l":{"p":[0.2,0.0,0.8]},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"Age","t":17.5,"l":{"p":[0.6,0.2,0.2]},"r":{"p":[0.0,0.25,0.75]}}}},"r":{"p":[1.0,0.0,0.0]}}},"r":{"f":"DiastolicBP","t":87.5,"l":{"f":"BodyTemp","t":101.5,"l":{"f":"BS","t":10.0,"l":{"f":"DiastolicBP","t":72.5,"l":{"p":[0.6,0.0,0.4]},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"Age","t":49.0,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.3333,0.0,0.6667]}}},"r":{"p":[0.4,0.0,0.6]}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"DiastolicBP","t":87.5,"l":{"f":"DiastolicBP","t":55.0,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"Age","t":56.5,"l":{"f":"BodyTemp","t":99.2,"l":{"f":"Age","t":39.5,"l":{"f":"Age","t":20.0,"l":{"p":[0.0,0.2273,0.7727]},"r":{"p":[0.0392,0.4902,0.4706]}},"r":{"f":"BS","t":13.5,"l":{"p":[0.1818,0.1818,0.6364]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"f":"SystolicBP","t":115.0,"l":{"f":"BS","t":6.65,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.4615,0.0,0.5385]}},"r":{"f":"BS","t":7.2,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.2222,0.2222,0.5556]}}}},"r":{"f":"HeartRate","t":75.5,"l":{"f":"HeartRate","t":72.5,"l":{"p":[0.5,0.5,0.0]},"r":{"p":[0.75,0.25,0.0]}},"r":{"p":[0.0,1.0,0.0]}}}},"r":{"f":"BS","t":7.95,"l":{"f":"SystolicBP","t":130.0,"l":{"f":"DiastolicBP","t":92.5,"l":{"p":[0.0769,0.6154,0.3077]},"r":{"p":[0.0,0.25,0.75]}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"BS","t":7.95,"l":{"f":"HeartRate","t":62.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BS","t":7.005,"l":{"f":"DiastolicBP","t":85.0,"l":{"f":"SystolicBP","t":87.5,"l":{"f":"Age","t":16.0,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.25,0.75,0.0]}},"r":{"f":"BodyTemp","t":100.5,"l":{"p":[0.0161,0.2419,0.7419]},"r":{"p":[0.4286,0.1429,0.4286]}}},"r":{"f":"Age","t":30.0,"l":{"p":[0.25,0.75,0.0]},"r":{"p":[0.0,1.0,0.0]}}},"r":{"f":"DiastolicBP","t":97.5,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"HeartRate","t":72.5,"l":{"p":[0.1852,0.3704,0.4444]},"r":{"p":[0.0,0.8333,0.1667]}},"r":{"p":[0.4,0.0,0.6]}},"r":{"p":[1.0,0.0,0.0]}}}},"r":{"f":"DiastolicBP","t":87.5,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"BS","t":10.0,"l":{"f":"HeartRate","t":83.0,"l":{"p":[0.6667,0.0,0.3333]},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"BS","t":12.0,"l":{"p":[0.6667,0.3333,0.0]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[0.0,0.0,1.0]}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"DiastolicBP","t":92.5,"l":{"f":"BS","t":8.45,"l":{"f":"BodyTemp","t":99.0,"l":{"f":"Age","t":54.5,"l":{"f":"BS","t":7.055,"l":{"f":"HeartRate","t":62.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0725,0.3913,0.5362]}},"r":{"f":"SystolicBP","t":125.0,"l":{"p":[0.0,0.8,0.2]},"r":{"p":[0.0,0.0,1.0]}}},"r":{"f":"Age","t":59.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.2,0.8,0.0]}}},"r":{"f":"Age","t":17.5,"l":{"f":"SystolicBP","t":105.0,"l":{"f":"Age","t":15.5,"l":{"p":[0.7143,0.0,0.2857]},"r":{"p":[0.5,0.0,0.5]}},"r":{"p":[0.5,0.5,0.0]}},"r":{"f":"BS","t":7.105,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.6667,0.0,0.3333]}}}},"r":{"f":"Age","t":52.0,"l":{"f":"HeartRate","t":65.0,"l":{"p":[0.5,0.0,0.5]},"r":{"f":"BodyTemp","t":101.5,"l":{"f":"HeartRate","t":87.0,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.8571,0.1429,0.0]}},"r":{"p":[0.5,0.0,0.5]}}},"r":{"p":[0.0,0.0,1.0]}}},"r":{"p":[1.0,0.0,0.0]}},{"f":"Age","t":29.5,"l":{"f":"BS","t":10.0,"l":{"f":"DiastolicBP","t":55.0,"l":{"f":"SystolicBP","t":95.0,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"SystolicBP","t":135.0,"l":{"f":"BodyTemp","t":99.2,"l":{"f":"SystolicBP","t":125.0,"l":{"p":[0.0,0.6066,0.3934]},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"BS","t":8.35,"l":{"p":[0.55,0.1,0.35]},"r":{"p":[0.0,0.0,1.0]}}},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[1.0,0.0,0.0]}},"r":{"f":"BS","t":7.95,"l":{"f":"HeartRate","t":77.5,"l":{"f":"DiastolicBP","t":62.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"SystolicBP","t":110.0,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BS","t":7.65,"l":{"p":[0.0,0.9,0.1]},"r":{"p":[0.2,0.2,0.6]}}}},"r":{"f":"Age","t":34.5,"l":{"p":[1.0,0.0,0.0]},"r":{"f":"Age","t":37.0,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.5,0.0,0.5]}}}},"r":{"f":"Age","t":44.0,"l":{"p":[1.0,0.0,0.0]},"r":{"f":"DiastolicBP","t":82.5,"l":{"f":"Age","t":49.0,"l":{"p":[0.3333,0.6667,0.0]},"r":{"p":[0.4545,0.0,0.5455]}},"r":{"p":[1.0,0.0,0.0]}}}}},{"f":"BS","t":8.5,"l":{"f":"HeartRate","t":65.5,"l":{"f":"DiastolicBP","t":82.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0,0.5,0.5]}},"r":{"f":"SystolicBP","t":125.0,"l":{"f":"Age","t":20.5,"l":{"f":"SystolicBP","t":87.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BodyTemp","t":100.5,"l":{"p":[0.0,0.3529,0.6471]},"r":{"p":[0.3158,0.2105,0.4737]}}},"r":{"f":"BodyTemp","t":99.5,"l":{"f":"BS","t":7.75,"l":{"p":[0.0182,0.7636,0.2182]},"r":{"p":[0.0909,0.3636,0.5455]}},"r":{"p":[0.3333,0.6667,0.0]}}},"r":{"f":"DiastolicBP","t":85.0,"l":{"f":"DiastolicBP","t":75.0,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.25,0.0,0.75]}},"r":{"p":[1.0,0.0,0.0]}}}},"r":{"f":"SystolicBP","t":135.0,"l":{"f":"BodyTemp","t":101.5,"l":{"f":"DiastolicBP","t":75.0,"l":{"f":"BS","t":10.5,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[0.5,0.0,0.5]}},"r":{"f":"BS","t":13.0,"l":{"f":"Age","t":44.0,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[0.0,0.0,1.0]}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"DiastolicBP","t":87.5,"l":{"f":"BodyTemp","t":99.2,"l":{"f":"SystolicBP","t":110.0,"l":{"f":"Age","t":13.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"BS","t":6.85,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BS","t":6.95,"l":{"p":[0.0,0.5714,0.4286]},"r":{"p":[0.0,0.9524,0.0476]}}}},"r":{"f":"BS","t":8.5,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"BS","t":7.85,"l":{"p":[0.0256,0.4615,0.5128]},"r":{"p":[0.0,0.25,0.75]}},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"HeartRate","t":73.5,"l":{"f":"DiastolicBP","t":82.5,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[0.6667,0.0,0.3333]}},"r":{"p":[1.0,0.0,0.0]}}}},"r":{"f":"SystolicBP","t":87.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"BS","t":8.45,"l":{"f":"DiastolicBP","t":62.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"HeartRate","t":78.0,"l":{"p":[0.4375,0.125,0.4375]},"r":{"p":[0.25,0.0,0.75]}}},"r":{"f":"BodyTemp","t":101.5,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.4286,0.0,0.5714]}}}}},"r":{"f":"SystolicBP","t":125.0,"l":{"f":"BS","t":9.45,"l":{"f":"Age","t":16.0,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"BS","t":7.7,"l":{"f":"HeartRate","t":78.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.3333,0.6667,0.0]}},"r":{"p":[0.0,0.5,0.5]}}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"HeartRate","t":87.0,"l":{"f":"BodyTemp","t":99.0,"l":{"f":"SystolicBP","t":135.0,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"DiastolicBP","t":49.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BS","t":8.45,"l":{"p":[0.0102,0.6224,0.3673]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"DiastolicBP","t":85.0,"l":{"p":[0.6667,0.0,0.3333]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"f":"Age","t":19.5,"l":{"f":"SystolicBP","t":115.0,"l":{"f":"DiastolicBP","t":64.0,"l":{"p":[0.3333,0.0,0.6667]},"r":{"f":"BS","t":8.45,"l":{"p":[0.4,0.0,0.6]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[0.0,0.5,0.5]}},"r":{"f":"Age","t":29.0,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"BS","t":11.95,"l":{"p":[0.5,0.5,0.0]},"r":{"p":[0.0,0.0,1.0]}}}}},"r":{"f":"DiastolicBP","t":87.5,"l":{"f":"Age","t":35.0,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.8333,0.1667,0.0]}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"DiastolicBP","t":87.5,"l":{"f":"BS","t":7.85,"l":{"f":"SystolicBP","t":87.5,"l":{"f":"HeartRate","t":78.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.3333,0.6667,0.0]}},"r":{"f":"BS","t":7.055,"l":{"f":"SystolicBP","t":135.0,"l":{"f":"HeartRate","t":79.0,"l":{"p":[0.0563,0.2958,0.6479]},"r":{"p":[0.25,0.75,0.0]}},"r":{"p":[0.75,0.0,0.25]}},"r":{"f":"Age","t":16.0,"l":{"p":[0.2222,0.0,0.7778]},"r":{"f":"BodyTemp","t":99.0,"l":{"p":[0.0357,0.6786,0.2857]},"r":{"p":[0.375,0.5,0.125]}}}}},"r":{"f":"SystolicBP","t":87.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"Age","t":49.0,"l":{"f":"DiastolicBP","t":82.5,"l":{"f":"BodyTemp","t":101.5,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.75,0.0,0.25]}},"r":{"p":[0.5,0.0,0.5]}},"r":{"f":"SystolicBP","t":125.0,"l":{"p":[0.3333,0.6667,0.0]},"r":{"p":[0.0,0.0,1.0]}}}}},"r":{"f":"DiastolicBP","t":97.5,"l":{"f":"SystolicBP","t":130.0,"l":{"f":"BS","t":9.45,"l":{"f":"BS","t":6.85,"l":{"p":[0.0,0.1667,0.8333]},"r":{"f":"HeartRate","t":73.0,"l":{"p":[0.0,0.75,0.25]},"r":{"p":[0.0,1.0,0.0]}}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"BS","t":7.95,"l":{"f":"BodyTemp","t":101.5,"l":{"f":"SystolicBP","t":105.0,"l":{"f":"Age","t":14.0,"l":{"f":"HeartRate","t":75.0,"l":{"f":"DiastolicBP","t":55.0,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.0,0.3333,0.6667]}},"r":{"p":[0.5,0.0,0.5]}},"r":{"f":"Age","t":17.0,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"Age","t":20.5,"l":{"p":[0.0,0.5,0.5]},"r":{"p":[0.0,0.9,0.1]}}}},"r":{"f":"BS","t":7.35,"l":{"f":"DiastolicBP","t":85.0,"l":{"f":"SystolicBP","t":135.0,"l":{"p":[0.0513,0.1538,0.7949]},"r":{"p":[0.75,0.0,0.25]}},"r":{"f":"DiastolicBP","t":92.5,"l":{"p":[0.3,0.7,0.0]},"r":{"p":[0.5,0.0,0.5]}}},"r":{"f":"HeartRate","t":77.5,"l":{"f":"BS","t":7.65,"l":{"p":[0.0,0.8667,0.1333]},"r":{"p":[0.0769,0.3077,0.6154]}},"r":{"f":"BS","t":7.75,"l":{"p":[0.0,0.3333,0.6667]},"r":{"p":[0.0,0.0,1.0]}}}}},"r":{"f":"DiastolicBP","t":72.5,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.0,0.8,0.2]}}},"r":{"f":"SystolicBP","t":87.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"BodyTemp","t":101.5,"l":{"f":"Age","t":52.0,"l":{"f":"HeartRate","t":63.0,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[1.0,0.0,0.0]}},"r":{"f":"DiastolicBP","t":90.0,"l":{"p":[0.3333,0.0,0.6667]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[0.2,0.0,0.8]}}}},{"f":"Age","t":24.5,"l":{"f":"BodyTemp","t":99.2,"l":{"f":"DiastolicBP","t":82.5,"l":{"f":"BS","t":7.105,"l":{"f":"SystolicBP","t":87.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"Age","t":13.5,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.0417,0.5,0.4583]}}},"r":{"f":"HeartRate","t":73.0,"l":{"f":"DiastolicBP","t":77.5,"l":{"p":[0.0,0.75,0.25]},"r":{"p":[0.0,1.0,0.0]}},"r":{"p":[0.0,1.0,0.0]}}},"r":{"f":"HeartRate","t":68.0,"l":{"f":"BS","t":7.3,"l":{"p":[0.0,0.3333,0.6667]},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"HeartRate","t":75.0,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[0.0,0.0,1.0]}}}},"r":{"f":"BS","t":7.85,"l":{"f":"SystolicBP","t":100.0,"l":{"f":"BS","t":6.95,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[0.2,0.0,0.8]}},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"DiastolicBP","t":62.5,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[1.0,0.0,0.0]}}}},"r":{"f":"BS","t":7.95,"l":{"f":"SystolicBP","t":105.0,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BS","t":6.85,"l":{"f":"HeartRate","t":73.0,"l":{"f":"BS","t":6.4,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0,0.25,0.75]}},"r":{"p":[0.0,0.2,0.8]}},"r":{"f":"BS","t":7.65,"l":{"f":"DiastolicBP","t":77.5,"l":{"p":[0.75,0.0,0.25]},"r":{"p":[0.2353,0.7647,0.0]}},"r":{"f":"DiastolicBP","t":75.0,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.75,0.1667,0.0833]}}}}},"r":{"f":"DiastolicBP","t":82.5,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"SystolicBP","t":87.5,"l":{"p":[0.6667,0.0,0.3333]},"r":{"f":"Age","t":41.5,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.6667,0.3333,0.0]}}},"r":{"p":[0.3333,0.0,0.6667]}},"r":{"p":[1.0,0.0,0.0]}}}},{"f":"SystolicBP","t":135.0,"l":{"f":"BodyTemp","t":99.2,"l":{"f":"SystolicBP","t":105.0,"l":{"f":"SystolicBP","t":87.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BS","t":6.95,"l":{"f":"HeartRate","t":76.5,"l":{"p":[0.0,0.1667,0.8333]},"r":{"p":[0.0,1.0,0.0]}},"r":{"f":"HeartRate","t":78.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.4,0.6,0.0]}}}},"r":{"f":"DiastolicBP","t":82.5,"l":{"f":"BS","t":7.25,"l":{"f":"DiastolicBP","t":65.0,"l":{"p":[0.0,0.5556,0.4444]},"r":{"p":[0.0357,0.1429,0.8214]}},"r":{"f":"SystolicBP","t":125.0,"l":{"p":[0.28,0.6,0.12]},"r":{"p":[0.0,0.0,1.0]}}},"r":{"f":"DiastolicBP","t":92.5,"l":{"f":"Age","t":34.5,"l":{"p":[0.0667,0.7333,0.2]},"r":{"p":[0.7143,0.2857,0.0]}},"r":{"f":"HeartRate","t":70.5,"l":{"p":[0.0,0.5,0.5]},"r":{"p":[1.0,0.0,0.0]}}}}},"r":{"f":"Age","t":19.5,"l":{"f":"DiastolicBP","t":77.5,"l":{"f":"BS","t":10.0,"l":{"f":"SystolicBP","t":87.5,"l":{"p":[0.75,0.0,0.25]},"r":{"p":[0.375,0.125,0.5]}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[0.2,0.0,0.8]}},"r":{"f":"BodyTemp","t":100.5,"l":{"f":"DiastolicBP","t":65.0,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.75,0.0,0.25]}},"r":{"p":[0.0,0.0,1.0]}}}},"r":{"f":"Age","t":49.5,"l":{"p":[1.0,0.0,0.0]},"r":{"f":"Age","t":52.0,"l":{"p":[0.6,0.0,0.4]},"r":{"p":[1.0,0.0,0.0]}}}},{"f":"DiastolicBP","t":87.5,"l":{"f":"Age","t":16.5,"l":{"f":"BS","t":7.65,"l":{"f":"HeartRate","t":68.0,"l":{"p":[0.0,0.8,0.2]},"r":{"f":"SystolicBP","t":87.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.2,0.8,0.0]}}},"r":{"p":[0.1667,0.1667,0.6667]}},"r":{"f":"Age","t":56.5,"l":{"f":"BS","t":10.0,"l":{"f":"BodyTemp","t":99.0,"l":{"f":"HeartRate","t":79.0,"l":{"p":[0.0159,0.4444,0.5397]},"r":{"p":[0.5,0.5,0.0]}},"r":{"f":"BodyTemp","t":102.5,"l":{"p":[0.1481,0.037,0.8148]},"r":{"p":[0.5,0.1667,0.3333]}}},"r":{"f":"DiastolicBP","t":72.5,"l":{"f":"BS","t":11.5,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.0,0.0,1.0]}},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[0.2727,0.7273,0.0]}}},"r":{"f":"DiastolicBP","t":97.5,"l":{"f":"BS","t":9.45,"l":{"f":"Age","t":24.0,"l":{"f":"SystolicBP","t":130.0,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[1.0,0.0,0.0]}},"r":{"f":"Age","t":36.0,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.5,0.5,0.0]}}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"SystolicBP","t":135.0,"l":{"f":"BodyTemp","t":99.2,"l":{"f":"BS","t":8.5,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"BS","t":7.05,"l":{"f":"HeartRate","t":76.5,"l":{"p":[0.0,0.413,0.587]},"r":{"p":[0.0909,0.6818,0.2273]}},"r":{"f":"BS","t":7.85,"l":{"p":[0.0,0.7895,0.2105]},"r":{"p":[0.0,0.5714,0.4286]}}},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"SystolicBP","t":125.0,"l":{"f":"HeartRate","t":87.0,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.5,0.5,0.0]}},"r":{"p":[0.3333,0.0,0.6667]}}},"r":{"f":"SystolicBP","t":87.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"BS","t":13.5,"l":{"f":"SystolicBP","t":100.0,"l":{"f":"BS","t":7.85,"l":{"p":[0.3333,0.0,0.6667]},"r":{"p":[1.0,0.0,0.0]}},"r":{"f":"DiastolicBP","t":70.0,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.4,0.2,0.4]}}},"r":{"p":[0.0,0.0,1.0]}}}},"r":{"f":"DiastolicBP","t":85.0,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[1.0,0.0,0.0]}}},{"f":"SystolicBP","t":135.0,"l":{"f":"BS","t":8.5,"l":{"f":"BS","t":7.055,"l":{"f":"BodyTemp","t":99.0,"l":{"f":"HeartRate","t":63.0,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BS","t":6.95,"l":{"p":[0.0208,0.4792,0.5]},"r":{"p":[0.0909,0.0,0.9091]}}},"r":{"f":"BodyTemp","t":102.5,"l":{"f":"BS","t":6.8,"l":{"p":[0.25,0.0,0.75]},"r":{"p":[0.0,0.0,1.0]}},"r":{"p":[0.6667,0.3333,0.0]}}},"r":{"f":"BS","t":7.75,"l":{"f":"BS","t":7.6,"l":{"f":"DiastolicBP","t":87.5,"l":{"p":[0.0333,0.8333,0.1333]},"r":{"p":[0.0,1.0,0.0]}},"r":{"f":"SystolicBP","t":105.0,"l":{"p":[0.25,0.75,0.0]},"r":{"p":[0.0,0.6,0.4]}}},"r":{"f":"BodyTemp","t":99.5,"l":{"f":"DiastolicBP","t":72.5,"l":{"p":[0.0,0.8571,0.1429]},"r":{"p":[0.125,0.125,0.75]}},"r":{"p":[0.5,0.0,0.5]}}}},"r":{"f":"BodyTemp","t":101.5,"l":{"f":"DiastolicBP","t":82.5,"l":{"f":"HeartRate","t":87.0,"l":{"f":"Age","t":28.5,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[0.75,0.0,0.25]}},"r":{"p":[0.5,0.5,0.0]}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[0.0,0.0,1.0]}}},"r":{"p":[1.0,0.0,0.0]}},{"f":"Age","t":31.5,"l":{"f":"SystolicBP","t":135.0,"l":{"f":"HeartRate","t":73.0,"l":{"f":"BS","t":6.95,"l":{"f":"BS","t":6.25,"l":{"f":"Age","t":19.0,"l":{"p":[0.3333,0.0,0.6667]},"r":{"p":[0.0,1.0,0.0]}},"r":{"f":"Age","t":13.5,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.0,0.6667,0.3333]}}},"r":{"f":"HeartRate","t":65.5,"l":{"f":"DiastolicBP","t":72.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0,0.5,0.5]}},"r":{"f":"BS","t":7.055,"l":{"p":[0.0952,0.0,0.9048]},"r":{"p":[0.1,0.35,0.55]}}}},"r":{"f":"SystolicBP","t":125.0,"l":{"f":"BS","t":7.8,"l":{"f":"BodyTemp","t":100.0,"l":{"p":[0.0,0.8158,0.1842]},"r":{"p":[0.3333,0.5,0.1667]}},"r":{"f":"SystolicBP","t":100.0,"l":{"p":[0.125,0.0,0.875]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[0.0,0.0,1.0]}}},"r":{"p":[1.0,0.0,0.0]}},"r":{"f":"DiastolicBP","t":82.5,"l":{"f":"Age","t":56.5,"l":{"f":"BodyTemp","t":99.5,"l":{"f":"SystolicBP","t":105.0,"l":{"f":"BS","t":7.45,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.5,0.5,0.0]}},"r":{"f":"Age","t":40.5,"l":{"p":[0.1667,0.0,0.8333]},"r":{"p":[0.3333,0.5556,0.1111]}}},"r":{"p":[0.0,0.0,1.0]}},"r":{"p":[0.0,1.0,0.0]}},"r":{"f":"BS","t":7.95,"l":{"f":"Age","t":37.5,"l":{"f":"BS","t":7.7,"l":{"p":[0.5,0.5,0.0]},"r":{"p":[0.6667,0.3333,0.0]}},"r":{"p":[0.25,0.75,0.0]}},"r":{"p":[1.0,0.0,0.0]}}}},{"f":"BS","t":7.95,"l":{"f":"BodyTemp","t":99.0,"l":{"f":"Age","t":13.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"SystolicBP","t":135.0,"l":{"f":"Age","t":39.5,"l":{"f":"SystolicBP","t":105.0,"l":{"p":[0.0,0.8857,0.1143]},"r":{"p":[0.0566,0.434,0.5094]}},"r":{"f":"BS","t":7.75,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.6667,0.0,0.3333]}}},"r":{"p":[1.0,0.0,0.0]}}},"r":{"f":"BodyTemp","t":102.5,"l":{"f":"HeartRate","t":73.0,"l":{"f":"BS","t":7.105,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.25,0.0,0.75]}},"r":{"f":"HeartRate","t":78.0,"l":{"f":"BS","t":6.75,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.3333,0.5,0.1667]}},"r":{"p":[0.6667,0.0,0.3333]}}},"r":{"p":[0.3333,0.6667,0.0]}}},"r":{"f":"Age","t":44.0,"l":{"f":"Age","t":28.5,"l":{"f":"DiastolicBP","t":62.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"HeartRate","t":73.0,"l":{"p":[0.6667,0.0,0.3333]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"p":[1.0,0.0,0.0]}},"r":{"f":"DiastolicBP","t":82.5,"l":{"f":"SystolicBP","t":125.0,"l":{"p":[0.3333,0.6667,0.0]},"r":{"p":[0.0,0.0,1.0]}},"r":{"p":[1.0,0.0,0.0]}}}},{"f":"BS","t":7.95,"l":{"f":"BodyTemp","t":99.0,"l":{"f":"Age","t":13.5,"l":{"f":"BS","t":6.85,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.0,0.6667,0.3333]}},"r":{"f":"SystolicBP","t":125.0,"l":{"f":"Age","t":15.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"HeartRate","t":68.0,"l":{"p":[0.0,0.4375,0.5625]},"r":{"p":[0.0411,0.6986,0.2603]}}},"r":{"f":"BS","t":6.75,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"Age","t":30.5,"l":{"p":[0.3333,0.0,0.6667]},"r":{"p":[1.0,0.0,0.0]}}}}},"r":{"f":"Age","t":17.5,"l":{"f":"DiastolicBP","t":72.5,"l":{"f":"Age","t":15.0,"l":{"f":"Age","t":12.5,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[0.75,0.0,0.25]}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[0.5,0.5,0.0]}},"r":{"f":"Age","t":24.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"DiastolicBP","t":77.5,"l":{"p":[0.3333,0.0,0.6667]},"r":{"p":[0.3333,0.6667,0.0]}}}}},"r":{"f":"DiastolicBP","t":65.0,"l":{"p":[0.1429,0.0,0.8571]},"r":{"f":"Age","t":44.0,"l":{"p":[1.0,0.0,0.0]},"r":{"f":"BodyTemp","t":100.0,"l":{"f":"DiastolicBP","t":82.5,"l":{"f":"HeartRate","t":77.5,"l":{"p":[0.75,0.0,0.25]},"r":{"p":[0.5,0.5,0.0]}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[0.0,0.0,1.0]}}}}},{"f":"BS","t":7.95,"l":{"f":"BodyTemp","t":99.2,"l":{"f":"SystolicBP","t":105.0,"l":{"f":"DiastolicBP","t":77.5,"l":{"f":"HeartRate","t":76.5,"l":{"f":"Age","t":19.5,"l":{"p":[0.0,0.25,0.75]},"r":{"p":[0.0,1.0,0.0]}},"r":{"p":[0.0,1.0,0.0]}},"r":{"p":[0.0,0.5,0.5]}},"r":{"f":"DiastolicBP","t":82.5,"l":{"f":"HeartRate","t":68.0,"l":{"p":[0.0,0.8571,0.1429]},"r":{"f":"Age","t":20.0,"l":{"p":[0.0,0.1333,0.8667]},"r":{"p":[0.122,0.3415,0.5366]}}},"r":{"f":"SystolicBP","t":130.0,"l":{"f":"DiastolicBP","t":92.5,"l":{"p":[0.1765,0.7059,0.1176]},"r":{"p":[0.0,0.5,0.5]}},"r":{"p":[1.0,0.0,0.0]}}}},"r":{"f":"Age","t":13.5,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"BodyTemp","t":102.5,"l":{"f":"BS","t":7.105,"l":{"f":"SystolicBP","t":100.0,"l":{"p":[0.6667,0.0,0.3333]},"r":{"p":[0.0,0.0,1.0]}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[0.5,0.25,0.25]}}}},"r":{"f":"SystolicBP","t":135.0,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"SystolicBP","t":87.5,"l":{"p":[0.4286,0.0,0.5714]},"r":{"f":"BS","t":10.0,"l":{"f":"DiastolicBP","t":72.5,"l":{"p":[0.8,0.0,0.2]},"r":{"p":[0.5,0.0,0.5]}},"r":{"f":"DiastolicBP","t":85.0,"l":{"p":[0.6,0.4,0.0]},"r":{"p":[1.0,0.0,0.0]}}}},"r":{"p":[0.0,0.0,1.0]}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"Age","t":28.5,"l":{"f":"Age","t":14.0,"l":{"f":"BodyTemp","t":99.5,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.125,0.0,0.875]}},"r":{"f":"BS","t":7.85,"l":{"f":"BS","t":7.055,"l":{"f":"DiastolicBP","t":55.0,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BS","t":6.5,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.1351,0.2973,0.5676]}}},"r":{"f":"BS","t":7.35,"l":{"f":"Age","t":22.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.5,0.5,0.0]}},"r":{"f":"HeartRate","t":68.5,"l":{"p":[0.0556,0.6667,0.2778]},"r":{"p":[0.0,0.8947,0.1053]}}}},"r":{"f":"BodyTemp","t":101.5,"l":{"f":"Age","t":21.0,"l":{"p":[0.3333,0.3333,0.3333]},"r":{"p":[0.0,0.0,1.0]}},"r":{"p":[0.5,0.0,0.5]}}}},"r":{"f":"BS","t":7.85,"l":{"f":"BS","t":6.85,"l":{"f":"DiastolicBP","t":77.5,"l":{"p":[0.0,0.1429,0.8571]},"r":{"f":"BS","t":6.25,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0,0.5,0.5]}}},"r":{"f":"BodyTemp","t":99.0,"l":{"f":"BS","t":7.6,"l":{"f":"HeartRate","t":74.0,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0,0.6667,0.3333]}},"r":{"p":[0.0,0.5,0.5]}},"r":{"p":[0.5,0.5,0.0]}}},"r":{"f":"SystolicBP","t":135.0,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"Age","t":44.0,"l":{"f":"DiastolicBP","t":75.0,"l":{"p":[0.7143,0.1429,0.1429]},"r":{"p":[1.0,0.0,0.0]}},"r":{"f":"HeartRate","t":73.5,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.4286,0.5714,0.0]}}},"r":{"f":"HeartRate","t":75.5,"l":{"p":[0.6667,0.0,0.3333]},"r":{"p":[0.0,0.0,1.0]}}},"r":{"p":[1.0,0.0,0.0]}}}},{"f":"SystolicBP","t":135.0,"l":{"f":"Age","t":14.0,"l":{"f":"BodyTemp","t":101.5,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[0.5,0.0,0.5]}},"r":{"f":"SystolicBP","t":105.0,"l":{"f":"BS","t":10.0,"l":{"f":"Age","t":18.5,"l":{"f":"Age","t":15.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0833,0.1667,0.75]}},"r":{"f":"BS","t":7.35,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0,0.8,0.2]}}},"r":{"p":[1.0,0.0,0.0]}},"r":{"f":"DiastolicBP","t":72.5,"l":{"f":"Age","t":30.0,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"Age","t":35.0,"l":{"p":[0.0,0.1667,0.8333]},"r":{"p":[0.0,0.0,1.0]}}},"r":{"f":"DiastolicBP","t":82.5,"l":{"f":"BodyTemp","t":99.5,"l":{"p":[0.1143,0.5143,0.3714]},"r":{"p":[0.375,0.25,0.375]}},"r":{"f":"BS","t":10.0,"l":{"p":[0.2381,0.6667,0.0952]},"r":{"p":[1.0,0.0,0.0]}}}}}},"r":{"f":"BS","t":6.905,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[1.0,0.0,0.0]}}},{"f":"BS","t":7.95,"l":{"f":"BS","t":7.05,"l":{"f":"HeartRate","t":79.0,"l":{"f":"SystolicBP","t":83.0,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"Age","t":29.5,"l":{"f":"DiastolicBP","t":85.0,"l":{"p":[0.0732,0.2439,0.6829]},"r":{"p":[0.4286,0.1429,0.4286]}},"r":{"f":"BS","t":6.25,"l":{"p":[0.0,0.4737,0.5263]},"r":{"p":[0.0,0.9091,0.0909]}}}},"r":{"f":"Age","t":34.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.5,0.5,0.0]}}},"r":{"f":"SystolicBP","t":125.0,"l":{"f":"HeartRate","t":78.5,"l":{"f":"DiastolicBP","t":62.5,"l":{"p":[0.2222,0.6667,0.1111]},"r":{"f":"DiastolicBP","t":77.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.05,0.85,0.1]}}},"r":{"f":"DiastolicBP","t":67.5,"l":{"p":[0.25,0.25,0.5]},"r":{"f":"Age","t":20.5,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.0,0.5,0.5]}}}},"r":{"p":[0.5,0.0,0.5]}}},"r":{"f":"DiastolicBP","t":82.5,"l":{"f":"HeartRate","t":78.0,"l":{"f":"DiastolicBP","t":75.0,"l":{"p":[0.0,0.0,1.0]},"r":{"f":"HeartRate","t":73.0,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.25,0.0,0.75]}}},"r":{"f":"BodyTemp","t":100.5,"l":{"f":"SystolicBP","t":110.0,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.75,0.25,0.0]}},"r":{"p":[0.5714,0.0,0.4286]}}},"r":{"p":[1.0,0.0,0.0]}}},{"f":"Age","t":31.5,"l":{"f":"DiastolicBP","t":97.5,"l":{"f":"BS","t":10.0,"l":{"f":"BodyTemp","t":99.2,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"Age","t":13.5,"l":{"p":[0.0,0.125,0.875]},"r":{"p":[0.0,0.697,0.303]}},"r":{"f":"Age","t":26.0,"l":{"p":[0.6667,0.0,0.3333]},"r":{"p":[0.0,0.0,1.0]}}},"r":{"f":"DiastolicBP","t":64.0,"l":{"f":"Age","t":14.5,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[0.0769,0.0,0.9231]}},"r":{"f":"HeartRate","t":78.0,"l":{"p":[0.2727,0.0,0.7273]},"r":{"p":[0.6,0.0,0.4]}}}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[1.0,0.0,0.0]}},"r":{"f":"HeartRate","t":76.5,"l":{"f":"Age","t":37.5,"l":{"f":"Age","t":33.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"SystolicBP","t":120.0,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[1.0,0.0,0.0]}}},"r":{"f":"BS","t":7.75,"l":{"f":"DiastolicBP","t":85.0,"l":{"p":[0.0,0.625,0.375]},"r":{"p":[0.0,1.0,0.0]}},"r":{"f":"DiastolicBP","t":82.5,"l":{"f":"Age","t":55.0,"l":{"p":[0.3333,0.0,0.6667]},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[1.0,0.0,0.0]}}}},"r":{"f":"HeartRate","t":89.0,"l":{"f":"BS","t":11.5,"l":{"f":"Age","t":39.5,"l":{"f":"SystolicBP","t":115.0,"l":{"p":[0.5,0.0,0.5]},"r":{"p":[0.8,0.0,0.2]}},"r":{"f":"BS","t":9.45,"l":{"p":[0.0,1.0,0.0]},"r":{"p":[0.4,0.6,0.0]}}},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[1.0,0.0,0.0]}}}},{"f":"SystolicBP","t":135.0,"l":{"f":"SystolicBP","t":82.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BS","t":8.5,"l":{"f":"SystolicBP","t":105.0,"l":{"f":"HeartRate","t":65.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"DiastolicBP","t":55.0,"l":{"p":[0.0,0.2,0.8]},"r":{"p":[0.2222,0.4815,0.2963]}}},"r":{"f":"HeartRate","t":87.0,"l":{"f":"Age","t":31.5,"l":{"p":[0.0278,0.2639,0.7083]},"r":{"p":[0.2,0.6,0.2]}},"r":{"p":[0.0,1.0,0.0]}}},"r":{"f":"BodyTemp","t":99.5,"l":{"f":"Age","t":49.0,"l":{"f":"HeartRate","t":70.0,"l":{"p":[0.6667,0.0,0.3333]},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[0.4,0.0,0.6]}},"r":{"f":"BS","t":13.5,"l":{"f":"DiastolicBP","t":62.5,"l":{"p":[0.0,0.0,1.0]},"r":{"p":[1.0,0.0,0.0]}},"r":{"p":[0.0,0.0,1.0]}}}}},"r":{"f":"Age","t":49.5,"l":{"p":[1.0,0.0,0.0]},"r":{"f":"HeartRate","t":68.0,"l":{"p":[1.0,0.0,0.0]},"r":{"p":[0.5,0.0,0.5]}}}},{"f":"SystolicBP","t":135.0,"l":{"f":"SystolicBP","t":125.0,"l":{"f":"DiastolicBP","t":49.5,"l":{"p":[0.0,1.0,0.0]},"r":{"f":"BodyTemp","t":99.2,"l":{"f":"Age","t":19.5,"l":{"f":"SystolicBP","t":92.5,"l":{"p":[0.0,0.8,0.2]},"r":{"p":[0.0,0.2222,0.7778]}},"r":{"f":"BS","t":8.45,"l":{"p":[0.0133,0.72,0.2667]},"r":{"p":[0.9091,0.0909,0.0]}}},"r":{"f":"HeartRate","t":83.0,"l":{"f":"Age","t":24.0,"l":{"p":[0.2941,0.1176,0.5882]},"r":{"p":[0.625,0.25,0.125]}},"r":{"p":[0.0,0.0,1.0]}}}},"r":{"p":[0.0,0.0,1.0]}},"r":{"f":"Age","t":49.5,"l":{"p":[1.0,0.0,0.0]},"r":{"f":"DiastolicBP","t":92.5,"l":{"p":[0.8,0.0,0.2]},"r":{"p":[1.0,0.0,0.0]}}}}]};
+
+const colors = { "high risk": "var(--red)", "mid risk": "var(--amber)", "low risk": "var(--sage)" };
+const displayNames = { "high risk": "High risk", "mid risk": "Mid risk", "low risk": "Low risk" };
+
+function predictProba(row) {
+  const acc = {};
+  FOREST.classes.forEach(c => acc[c] = 0);
+  FOREST.trees.forEach(tree => {
+    let node = tree;
+    while (!node.p) {
+      node = row[node.f] <= node.t ? node.l : node.r;
+    }
+    FOREST.classes.forEach((c, i) => acc[c] += node.p[i]);
+  });
+  const n = FOREST.trees.length;
+  FOREST.classes.forEach(c => acc[c] /= n);
+  return acc;
+}
+
+const sliders = ['age','sbp','dbp','bs','temp','hr'];
+sliders.forEach(id => {
+  const el = document.getElementById(id);
+  const val = document.getElementById(id + '-val');
+  el.addEventListener('input', () => {
+    val.textContent = (id === 'bs' || id === 'temp') ? parseFloat(el.value).toFixed(1) : el.value;
+  });
+});
+
+const form = document.getElementById('form');
+const resultEl = document.getElementById('result');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const row = {
+    Age: parseFloat(document.getElementById('age').value),
+    SystolicBP: parseFloat(document.getElementById('sbp').value),
+    DiastolicBP: parseFloat(document.getElementById('dbp').value),
+    BS: parseFloat(document.getElementById('bs').value),
+    BodyTemp: parseFloat(document.getElementById('temp').value),
+    HeartRate: parseFloat(document.getElementById('hr').value)
+  };
+
+  const probs = predictProba(row);
+  const sorted = Object.entries(probs).sort((a, b) => b[1] - a[1]);
+  const [topClass, topProb] = sorted[0];
+
+  document.getElementById('result-label').textContent = displayNames[topClass];
+  document.getElementById('result-label').style.color = colors[topClass];
+
+  const rowsEl = document.getElementById('prob-rows');
+  rowsEl.innerHTML = '';
+  sorted.forEach(([cls, p]) => {
+    const pct = Math.round(p * 100);
+    const div = document.createElement('div');
+    div.className = 'probrow';
+    div.innerHTML =
+      '<div class="top"><span class="name">' + displayNames[cls] + '</span><span class="pct">' + pct + '%</span></div>' +
+      '<div class="ptrack"><div class="pfill" style="width:' + pct + '%; background:' + colors[cls] + ';"></div></div>';
+    rowsEl.appendChild(div);
+  });
+
+  resultEl.classList.add('show');
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+</script>
+</body>
+</html>
+
