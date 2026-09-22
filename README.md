@@ -5,8 +5,7 @@ A data mining project that classifies pregnant women into three maternal health 
 > Course project — DS312: Data Mining.
 > This was a **group project**; this repository reflects my contribution to the shared codebase.
 
-**Live Demo:** https://GhadahAlmaawy.github.io/maternal-health-risk-classification/
-
+**Live Demo:** https://ghadah-almaawy.github.io/Maternal_health_risk_classification-/
 ##  Problem Statement
 
 Maternal mortality remains a critical global health issue, and early risk detection can help prioritize care for high-risk pregnancies. This project uses IoT-collected physiological data (age, blood pressure, blood sugar, body temperature, heart rate) from hospitals and community clinics to predict a pregnant woman's health risk level.
